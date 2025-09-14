@@ -12,29 +12,29 @@ async
 function run() {
     core.notice('Deploying to S3 using JavaScript action');
 
-    // try {
-    //     const bucket = core.getInput('bucket', { required: true });
-    //     const folder = core.getInput('folder', { required: false }) || '';
-    //     const cache = core.getInput('caching', { required: false }) === 'true';
+    try {
+        const bucket = core.getInput('bucket-name', { required: true });
+        const folder = core.getInput('source-dir', { required: true });
+        const region = core.getInput('bucket-region', { required: false }) === 'true';
 
-    //     core.info(`Deploying to bucket: ${bucket}, folder: ${folder}, caching: ${cache}`);
+        core.info(`Deploying to bucket: ${bucket}, folder: ${folder}, caching: ${cache}`);
 
-    //     // Simulate deployment command
-    //     let deployCommand = `aws s3 sync ./dist s3://${bucket}/${folder} --delete`;
-    //     if (!cache) {
-    //         deployCommand += ' --no-cache';
-    //     }
+        // Simulate deployment command
+        let deployCommand = `aws s3 sync ./dist s3://${bucket}/${folder} --delete`;
+        if (!cache) {
+            deployCommand += ' --no-cache';
+        }
 
-    //     await exec.exec(deployCommand);
+        await exec.exec(deployCommand);
 
-    //     core.info('Deployment completed successfully');
+        core.info('Deployment completed successfully');
 
-    //     // Set output to indicate if cache was used
-    //     core.setOutput('used-cache', cache ? 'true' : 'false');
+        // Set output to indicate if cache was used
+        core.setOutput('used-cache', cache ? 'true' : 'false');
 
-    // } catch (error) {
-    //     core.setFailed(`Deployment failed: ${error.message}`);
-    // }   ´
+    } catch (error) {
+        core.setFailed(`Deployment failed: ${error.message}`);
+    }   ´
 
 }
 

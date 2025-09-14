@@ -3,12 +3,16 @@ descrition: 'Deploy to AWS S3'
 runs:
   using: 'node16'
   main: 'main.js'
-# inputs:
-#   bucket-name:
-#     description: 'The name of the S3 bucket to deploy to'
-#     required: true
-#   source-dir:
-#     description: 'The directory containing the files to deploy'
-#     required: true
-#     default: 'dist'
+inputs:
+  bucket-name:
+    description: 'The name of the S3 bucket to deploy to'
+    required: true
+  bucket-region:
+    description: 'The AWS region where the S3 bucket is located'
+    required: false
+    default: 'us-east-1'
+  source-dir:
+    description: 'The directory containing the files to deploy'
+    required: true
+    default: 'dist'
 
