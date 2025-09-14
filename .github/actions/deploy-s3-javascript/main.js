@@ -12,29 +12,16 @@ async
 function run() {
     core.notice('Deploying to S3 using JavaScript action');
 
-    try {
-        const bucket = core.getInput('bucket-name', { required: true });
-        const folder = core.getInput('source-dir', { required: true });
-        const region = core.getInput('bucket-region', { required: false }) === 'true';
+    // try {
+    //     const bucket = core.getInput('bucket-name', { required: true });
+    //     const distFolder = core.getInput('source-dir', { required: true });
+    //     const bucketRegion = core.getInput('bucket-region', { required: true });
 
-        core.info(`Deploying to bucket: ${bucket}, folder: ${folder}, caching: ${cache}`);
+       
 
-        // Simulate deployment command
-        let deployCommand = `aws s3 sync ./dist s3://${bucket}/${folder} --delete`;
-        if (!cache) {
-            deployCommand += ' --no-cache';
-        }
-
-        await exec.exec(deployCommand);
-
-        core.info('Deployment completed successfully');
-
-        // Set output to indicate if cache was used
-        core.setOutput('used-cache', cache ? 'true' : 'false');
-
-    } catch (error) {
-        core.setFailed(`Deployment failed: ${error.message}`);
-    }   ´
+    // } catch (error) {
+    //     core.setFailed(`Deployment failed: ${error.message}`);
+    // } 
 
 }
 
