@@ -15,4 +15,8 @@ inputs:
     description: 'The directory containing the files to deploy'
     required: true
     default: 'dist'
+outputs:
+  website-url:
+    description: 'The URL of the deployed website'
+  
 

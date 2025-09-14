@@ -13,6 +13,11 @@ function run() {
 
         // 2. Upload files
         exec.exec('aws s3 sync ' + distFolder + ' s3://' + bucket + ' --region ' + bucketRegion);
+
+        // 3. output the website URL
+        const websiteUrl = `http://${bucket}.s3-website.${bucketRegion}.amazonaws.com`;
+        core.setOutput('website-url', websiteUrl);
+        core.notice('Website URL: ' + websiteUrl);
        
 
     } catch (error) {
