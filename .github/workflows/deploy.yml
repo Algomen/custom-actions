@@ -64,3 +64,11 @@ jobs:
         run: ls
       - name: Deploy site
         run: echo "Deploying..."
+  information:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run custom action
+        uses: ./.github/actions/deploy-s3-javascript
+        # with:
+        #   bucket-name: ${{ secrets.AWS_S3_BUCKET_NAME }}
+        #   source-dir: 'dist'

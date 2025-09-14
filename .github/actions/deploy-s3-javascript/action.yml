@@ -1,0 +1,14 @@
+name: 'Deploy to AWS S3'
+descrition: 'Deploy to AWS S3'
+runs:
+  using: 'node16'
+  main: 'main.js'
+# inputs:
+#   bucket-name:
+#     description: 'The name of the S3 bucket to deploy to'
+#     required: true
+#   source-dir:
+#     description: 'The directory containing the files to deploy'
+#     required: true
+#     default: 'dist'
+
