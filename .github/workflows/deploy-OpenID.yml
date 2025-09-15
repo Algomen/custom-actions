@@ -1,0 +1,83 @@
+name: Deployment
+on:
+  push:
+    branches:
+      - main
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v5
+      - name: cache and install dependencies
+        id: cache-and-install-dependencies
+        uses: ./.github/actions/cached-deps
+        with:
+          caching: 'false'
+      - name: Check cache usage
+        run: |
+          echo "Cache used: ${{ steps.cache-and-install-dependencies.outputs.used-cache }}"
+      - name: Lint code
+        run: npm run lint
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v5
+      - name: cache and install dependencies
+        uses: ./.github/actions/cached-deps
+      - name: Test code
+        id: run-tests
+        run: npm run test
+      - name: Upload test report
+        if: failure() && steps.run-tests.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: test.json
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: cache and install dependencies
+        uses: ./.github/actions/cached-deps
+      - name: Build website
+        run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist
+  deploy:
+    permiossions:
+      id-token: write
+      contents: read
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v5
+      - name: Get build artifacts
+        uses: actions/download-artifact@v5
+        with:
+          name: dist-files
+          path: ./dist
+      - name: Output contents
+        run: ls
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: us-east-1
+          role-session-name: GitHubActions
+      - name: Deploy site
+        id: deploy
+        uses: ./.github/actions/deploy-s3-docker
+        with:
+          bucket-name: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          source-dir: './dist'
+          bucket-region: 'us-east-1'
+      - name: Get deployment URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.website-url }}"
